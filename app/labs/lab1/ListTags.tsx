@@ -34,7 +34,7 @@ export default function ListTags() {
             <li>table &ndash; arranges content into rows and columns</li>
             <li>span &ndash; groups inline text without starting a new line</li>
         </ul>
-        <h5>Ethan's Recipe</h5>
+        <h5>Ethan&apos;s Recipe</h5>
         How to make cereal:
         <ol id="wd-your-favorite-recipe">
             <li>Take out ingredients (bowl, cereal of choice, and milk)</li>
@@ -42,7 +42,7 @@ export default function ListTags() {
             <li>Pour the milk into the bowl</li>
             <li>Enjoy!</li>
         </ol>
-        <h5>Ethan's Favorite Books</h5>
+        <h5>Ethan&apos;s Favorite Books</h5>
         Here are my favorite books (in no particular order)
         <ul id="wd-your-books">
             <li>Red Rising</li>
