@@ -1,4 +1,11 @@
-export default function AssignmentEditor() {
+import Link from "next/link";
+
+export default async function AssignmentEditor({
+  params,
+}: {
+  params: Promise<{ cid: string }>;
+}) {
+    const { cid } = await params;
     return (
       <div id="wd-assignments-editor">
         <label htmlFor="wd-name">Assignment Name</label>
@@ -18,10 +25,11 @@ export default function AssignmentEditor() {
                 <input id="wd-points" defaultValue={100} />
               </td>
             </tr>
-            {/* Complete on your own — see checklist below */}
             <tr>
-              <td align="left" >
+              <td align="right" valign="top">
                 <label htmlFor="wd-group">Assignment Group</label>
+              </td>
+              <td>
                 <select id="wd-group" defaultValue="ASSIGNMENTS">
                   <option value="ASSIGNMENTS">ASSIGNMENTS</option>
                   <option value="QUIZZES">QUIZZES</option>
@@ -31,15 +39,17 @@ export default function AssignmentEditor() {
               </td>
             </tr>
             <tr>
-              <td align="left">
+              <td align="right" valign="top">
                 <label htmlFor="wd-display-grade-as">Display Grade as</label>
+              </td>
+              <td>
                 <select id="wd-display-grade-as" defaultValue="PERCENTAGE">
                   <option value="PERCENTAGE">PERCENTAGE</option>
                 </select>
               </td>
             </tr>
             <tr>
-              <td align="left" valign="top">
+              <td align="right" valign="top">
                 <label htmlFor="wd-submission-type">Submission Type</label>
               </td>
               <td>
@@ -66,29 +76,55 @@ export default function AssignmentEditor() {
               </td>
             </tr>
             <tr>
-              <td align="left" valign="top">
+              <td align="right" valign="top">
                 <label htmlFor="wd-assign-to">Assign</label>
               </td>
               <td>
-                <label><b> Assign to</b></label>
+                <label htmlFor="wd-assign-to"><b>Assign to</b></label>
                 <br />
                 <input id="wd-assign-to" defaultValue="Everyone"/>
                 <br />
-                <b>Due</b>
+                <label htmlFor="wd-due-date"><b>Due</b></label>
                 <br />
                 <input type="date" id="wd-due-date"/>
                 <br />
-                <b>Available From </b>
-                <b>Until</b>
-                <br />
-                <input type="date" id="wd-available-from"/>
-                <input type="date" id="wd-available-until"/>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label htmlFor="wd-available-from">
+                          <b>Available from</b>
+                        </label>
+                      </td>
+                      <td>
+                        <label htmlFor="wd-available-until">
+                          <b>Until</b>
+                        </label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input type="date" id="wd-available-from"/>
+                      </td>
+                      <td>
+                        <input type="date" id="wd-available-until"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </td>
               
             </tr>
 
           </tbody>
         </table>
+        <br />
+        <Link href={`/courses/${cid}/assignments`} id="wd-cancel">
+          <button type="button">Cancel</button>
+        </Link>{" "}
+        <Link href={`/courses/${cid}/assignments`} id="wd-save">
+          <button type="button">Save</button>
+        </Link>
       </div>
     );
   }
