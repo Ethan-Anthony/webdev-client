@@ -1,6 +1,6 @@
 export default function Positions() {
     return (
-        <>
+        <div id="wd-css-positions">
       <div id="wd-css-position-relative">
         <h2>Relative</h2>
         <div className="wd-bg-color-gray">
@@ -50,6 +50,6 @@ export default function Positions() {
             Badge
         </div>
     </div>
-    </>
+    </div>
     );
   }

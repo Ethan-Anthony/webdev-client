@@ -16,17 +16,6 @@ import GridLayout from "./GridLayout";
 import Flex from "./Flex";
 import MediaQueriesDemo from "./MediaQueriesDemo";
 import ReactIconsSampler from "./ReactIconsSampler";
-import TailwindSpacing from "./tailwind/TailwindSpacing";
-import TailwindTypography from "./tailwind/TailwindTypography";
-import TailwindBackgroundColors from "./tailwind/TailwindBackgroundColors";
-import TailwindResponsiveBreakpoint from "./tailwind/TailwindResponsiveBreakpoint";
-import TailwindResponsiveShowHide from "./tailwind/TailwindResponsiveShowHide";
-import TailwindResponsiveFlex from "./tailwind/TailwindResponsiveFlex";
-import TailwindResponsiveGrid from "./tailwind/TailwindResponsiveGrid";
-import TailwindResponsiveSpacingText from "./tailwind/TailwindResponsiveSpacingText";
-import TailwindResponsiveDesign from "./tailwind/TailwindResponsiveDesign";
-import TailwindFilters from "./tailwind/TailwindFilters";
-import TailwindGrids from "./tailwind/TailwindGrids";
 
 export default function Lab2() {
   return (
@@ -144,32 +133,6 @@ export default function Lab2() {
       <Flex />
       <MediaQueriesDemo />
       <ReactIconsSampler />
-      <div className="p-8">
-      <h1 className="text-4xl font-bold mb-8">Tailwind CSS</h1>
-      <TailwindSpacing />
-      <hr className="my-8" />
-      <TailwindTypography />
-      <hr className="my-8" />
-      <TailwindBackgroundColors />
-      <hr className="my-8" />
-      <TailwindResponsiveBreakpoint />
-      <hr className="my-8" />
-      <TailwindResponsiveShowHide />
-      <hr className="my-8" />
-      <TailwindResponsiveFlex />
-      <hr className="my-8" />
-      <TailwindResponsiveGrid />
-      <hr className="my-8" />
-      <TailwindResponsiveSpacingText />
-      <hr className="my-8" />
-      <TailwindResponsiveDesign />
-      <hr className="my-8" />
-      <TailwindFilters />
-      <hr className="my-8" />
-      <TailwindGrids />
     </div>
-    </div>
-    
-
   );
 }
