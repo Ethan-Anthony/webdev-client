@@ -11,68 +11,62 @@ export default function KambazNavigation() {
   const pathname = usePathname();
   const linkColors = (href: string) =>
     pathname.startsWith(href) ? "bg-white text-red-600" : "bg-black text-white";
+  const link = "flex flex-col items-center py-3 text-center text-sm no-underline";
   return (
     <nav
       id="wd-kambaz-navigation"
-      className="fixed bottom-0 top-0 left-0 z-20 hidden w-[120px] bg-black md:block"
+      className="fixed bottom-0 top-0 left-0 z-20 hidden w-[120px] flex-col bg-black md:flex"
     >
       <Link
         href="/account"
         id="wd-account-link"
-        className={`block py-3 text-center text-sm no-underline ${linkColors("/account")}`}
+        className={`${link} ${linkColors("/account")}`}
       >
         <FaRegCircleUser
-          className={`inline-block text-3xl ${
+          className={`text-3xl ${
             pathname.startsWith("/account") ? "text-red-600" : "text-white"
           }`}
         />
-        <br />
         Account
       </Link>
       <Link
         href="/dashboard"
         id="wd-dashboard-link"
-        className={`block py-3 text-center text-sm no-underline ${linkColors("/dashboard")}`}
+        className={`${link} ${linkColors("/dashboard")}`}
       >
-        <AiOutlineDashboard className="inline-block text-3xl text-red-600" />
-        <br />
+        <AiOutlineDashboard className="text-3xl text-red-600" />
         Dashboard
       </Link>
-      <Link 
-        href="/course" 
+      <Link
+        href="/course"
         id="wd-course-link"
-        className={`block py-3 text-center text-sm no-underline ${linkColors("/course")}`}
+        className={`${link} ${linkColors("/course")}`}
       >
-        <FaBook className="inline-block overflow-visible text-3xl fill-transparent stroke-red-500 stroke-[20]" />
-        <br/>
+        <FaBook className="overflow-visible text-3xl fill-transparent stroke-red-500 stroke-[20]" />
         Courses
       </Link>
       <Link
         href="/calendar"
         id="wd-calendar-link"
-        className={`block py-3 text-center text-sm no-underline ${linkColors("/calendar")}`}
+        className={`${link} ${linkColors("/calendar")}`}
       >
-        <FaCalendarAlt className="inline-block overflow-visible text-3xl fill-transparent stroke-red-500 stroke-[20]" />
-        <br />
+        <FaCalendarAlt className="overflow-visible text-3xl fill-transparent stroke-red-500 stroke-[20]" />
         Calendar
       </Link>
       <Link
         href="/inbox"
         id="wd-inbox-link"
-        className={`block py-3 text-center text-sm no-underline ${linkColors("/inbox")}`}
+        className={`${link} ${linkColors("/inbox")}`}
       >
-        <GoInbox className="inline-block text-3xl text-red-500" />
-        <br />
+        <GoInbox className="text-3xl text-red-500" />
         Inbox
       </Link>
-      <br />
       <Link
         href="/labs"
         id="wd-ai-nav-help"
-        className="block bg-black py-3 text-center text-sm text-white no-underline"
+        className={`${link} mt-4 bg-black text-white`}
       >
-        <FaCircleQuestion className="inline-block text-3xl text-red-500" />
-        <br />
+        <FaCircleQuestion className="text-3xl text-red-500" />
         Help
       </Link>
     </nav>

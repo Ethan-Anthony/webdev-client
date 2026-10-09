@@ -15,7 +15,7 @@ export default function Dashboard() {
           id="1234"
           title="CS1234 Ethan's class"
           subtitle="Learn all about Ethan"
-          image="/images/huntermountain"
+          image="/images/huntermountain.jpg"
         />
         <CourseCard
           id="2345"
