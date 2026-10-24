@@ -296,6 +296,7 @@ h5 {
     position: fixed;
     left: 0px;
     top: 0%;
+    z-index: -1;
   }
   .wd-zindex-bring-to-front {
     z-index: 10;
