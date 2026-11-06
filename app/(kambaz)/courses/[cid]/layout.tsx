@@ -22,9 +22,10 @@ export default function CoursesLayout({
   const router = useRouter();
   const { currentUser } = useAccountContext();
   const enrollments = useEnrollmentsStore((state) => state.enrollments);
-  const allowed = isEnrolled(enrollments, currentUser?._id, courseId);
+  const allowed =
+    !currentUser || isEnrolled(enrollments, currentUser._id, courseId);
 
-  // Only enrolled users may open a course; everyone else goes back to the Dashboard.
+  // Signed-out visitors can browse; signed-in users must be enrolled.
   useEffect(() => {
     if (!allowed) router.replace("/dashboard");
   }, [allowed, router]);

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { FaUserCircle } from "react-icons/fa";
 import {
+  canEdit,
   emptyUser,
   useAccountContext,
   type User,
@@ -19,7 +20,7 @@ const input = "rounded border border-neutral-300 px-2 py-1";
 export default function PeopleTable() {
   const { cid } = useParams<{ cid: string }>();
   const { currentUser } = useAccountContext();
-  const isFaculty = currentUser?.role === "FACULTY";
+  const isFaculty = canEdit(currentUser);
   const users = useUsersStore((state) => state.users);
   const addUser = useUsersStore((state) => state.addUser);
   const enrollments = useEnrollmentsStore((state) => state.enrollments);

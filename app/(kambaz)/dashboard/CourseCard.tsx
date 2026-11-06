@@ -5,12 +5,14 @@ import { useCoursesStore, type Course } from "../store/coursesStore";
 export default function CourseCard({
   course,
   enrolled,
+  canOpen,
   isFaculty,
   onEdit,
   onToggleEnrollment,
 }: {
   course: Course;
   enrolled: boolean;
+  canOpen: boolean;
   isFaculty: boolean;
   onEdit: () => void;
   onToggleEnrollment?: () => void;
@@ -22,8 +24,8 @@ export default function CourseCard({
         href={`/courses/${course._id}/home`}
         className="wd-dashboard-course-link block text-neutral-900 no-underline"
         onClick={(event) => {
-          // Only enrolled users can open a course; everyone else stays on the Dashboard.
-          if (!enrolled) event.preventDefault();
+          // Signed-in users can only open courses they're enrolled in.
+          if (!canOpen) event.preventDefault();
         }}
       >
         <Image
@@ -41,7 +43,7 @@ export default function CourseCard({
             {course.description}
           </p>
           <div className="flex flex-wrap gap-2">
-            {enrolled && (
+            {canOpen && (
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white"

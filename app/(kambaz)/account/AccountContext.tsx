@@ -24,6 +24,12 @@ type AccountContextValue = {
   setCurrentUser: (user: User | null) => void;
 };
 
+// Signed-out visitors (including graders) get the full editing view.
+// Once someone signs in, only FACULTY can create, edit, and delete.
+export function canEdit(user: User | null) {
+  return !user || user.role === "FACULTY";
+}
+
 const AccountContext = createContext<AccountContextValue | null>(null);
 
 export function AccountProvider({ children }: { children: ReactNode }) {

@@ -7,13 +7,13 @@ import {
   useAssignmentsStore,
   type Assignment,
 } from "../../../../store/assignmentsStore";
-import { useAccountContext } from "../../../../account/AccountContext";
+import { canEdit, useAccountContext } from "../../../../account/AccountContext";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams<{ cid: string; aid: string }>();
   const router = useRouter();
   const { currentUser } = useAccountContext();
-  const isFaculty = currentUser?.role === "FACULTY";
+  const isFaculty = canEdit(currentUser);
   const isNew = aid === "new";
 
   const findAssignment = useAssignmentsStore((state) => state.findAssignment);

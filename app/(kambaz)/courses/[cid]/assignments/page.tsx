@@ -5,12 +5,12 @@ import { useParams } from "next/navigation";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import AssignmentItem from "./AssignmentItem";
 import { useAssignmentsStore } from "../../../store/assignmentsStore";
-import { useAccountContext } from "../../../account/AccountContext";
+import { canEdit, useAccountContext } from "../../../account/AccountContext";
 
 export default function Assignments() {
   const { cid } = useParams<{ cid: string }>();
   const { currentUser } = useAccountContext();
-  const isFaculty = currentUser?.role === "FACULTY";
+  const isFaculty = canEdit(currentUser);
   const deleteAssignment = useAssignmentsStore((state) => state.deleteAssignment);
   const assignments = useAssignmentsStore((state) => state.assignments).filter(
     (assignment) => assignment.course === cid,

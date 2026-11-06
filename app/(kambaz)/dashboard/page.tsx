@@ -8,11 +8,11 @@ import {
   type Course,
 } from "../store/coursesStore";
 import { isEnrolled, useEnrollmentsStore } from "../store/enrollmentsStore";
-import { useAccountContext } from "../account/AccountContext";
+import { canEdit, useAccountContext } from "../account/AccountContext";
 
 export default function Dashboard() {
   const { currentUser } = useAccountContext();
-  const isFaculty = currentUser?.role === "FACULTY";
+  const isFaculty = canEdit(currentUser);
   const courses = useCoursesStore((state) => state.courses);
   const addCourse = useCoursesStore((state) => state.addCourse);
   const updateCourse = useCoursesStore((state) => state.updateCourse);
@@ -22,8 +22,10 @@ export default function Dashboard() {
   const [course, setCourse] = useState<Course>(emptyCourse);
   const [showAllCourses, setShowAllCourses] = useState(false);
 
-  const visibleCourses = showAllCourses
-    ? courses
+  // Signed out: show every course. Signed in: enrolled only, unless toggled.
+  const visibleCourses =
+    !currentUser || showAllCourses
+      ? courses
     : courses.filter((c) => isEnrolled(enrollments, currentUser?._id, c._id));
 
   const addAndEnroll = () => {
@@ -108,7 +110,6 @@ export default function Dashboard() {
         {visibleCourses.length})
       </h2>
       <hr />
-      {!currentUser && <p>Sign in to see your courses.</p>}
       <div
         id="wd-dashboard-courses"
         className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
@@ -120,6 +121,7 @@ export default function Dashboard() {
               key={c._id}
               course={c}
               enrolled={enrolled}
+              canOpen={!currentUser || enrolled}
               isFaculty={isFaculty}
               onEdit={() => setCourse(c)}
               onToggleEnrollment={
