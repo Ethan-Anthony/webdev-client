@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -8,44 +8,75 @@ import {
   type Assignment,
 } from "../../../../store/assignmentsStore";
 import { canEdit, useAccountContext } from "../../../../account/AccountContext";
+import * as client from "../../../client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams<{ cid: string; aid: string }>();
+  const courseId = cid;
   const router = useRouter();
   const { currentUser } = useAccountContext();
   const isFaculty = canEdit(currentUser);
   const isNew = aid === "new";
 
-  const findAssignment = useAssignmentsStore((state) => state.findAssignment);
-  const existing = findAssignment(aid);
+  const setAssignments = useAssignmentsStore((state) => state.setAssignments);
   const addAssignment = useAssignmentsStore((state) => state.addAssignment);
   const updateAssignment = useAssignmentsStore((state) => state.updateAssignment);
 
-  const [assignment, setAssignment] = useState<Assignment>(
-    existing ?? {
-      _id: "new",
-      title: "New Assignment",
-      course: cid,
-      description: "",
-      points: 100,
-      due: "",
-      available: "",
-      until: "",
-    },
-  );
+  const [assignment, setAssignment] = useState<Assignment>({
+    _id: "new",
+    title: "New Assignment",
+    course: cid,
+    description: "",
+    points: 100,
+    due: "",
+    available: "",
+    until: "",
+  });
+  const [loaded, setLoaded] = useState(isNew);
+  const [found, setFound] = useState(isNew);
+
+  // Load from the server so a refresh shows the saved version.
+  useEffect(() => {
+    if (isNew) return;
+    const load = async () => {
+      const assignments: Assignment[] =
+        await client.findAssignmentsForCourse(courseId);
+      setAssignments(assignments);
+      const existing = assignments.find((a) => a._id === aid);
+      if (existing) {
+        setAssignment(existing);
+        setFound(true);
+      }
+      setLoaded(true);
+    };
+    load();
+  }, [courseId, aid, isNew]);
 
   const listUrl = `/courses/${cid}/assignments`;
 
-  const save = () => {
+  const onAddAssignment = async () => {
+    const { _id, ...draft } = assignment;
+    const created = await client.createAssignmentForCourse(courseId, draft);
+    addAssignment(created);
+  };
+
+  const onUpdateAssignment = async (assignment: Assignment) => {
+    const saved = await client.updateAssignment(assignment);
+    updateAssignment(saved);
+  };
+
+  const save = async () => {
     if (isNew) {
-      addAssignment(assignment);
+      await onAddAssignment();
     } else {
-      updateAssignment(assignment);
+      await onUpdateAssignment(assignment);
     }
     router.push(listUrl);
   };
 
-  if (!isNew && !existing) {
+  if (!loaded) return null;
+
+  if (!found) {
     return (
       <div id="wd-assignments-editor">
         <p>Assignment not found.</p>

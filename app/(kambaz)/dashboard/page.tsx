@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CourseCard from "./CourseCard";
+import * as client from "../courses/client";
+import * as enrollmentsClient from "../enrollments/client";
 import {
   emptyCourse,
   useCoursesStore,
@@ -14,24 +16,61 @@ export default function Dashboard() {
   const { currentUser } = useAccountContext();
   const isFaculty = canEdit(currentUser);
   const courses = useCoursesStore((state) => state.courses);
+  const setCourses = useCoursesStore((state) => state.setCourses);
   const addCourse = useCoursesStore((state) => state.addCourse);
   const updateCourse = useCoursesStore((state) => state.updateCourse);
+  const deleteCourse = useCoursesStore((state) => state.deleteCourse);
   const enrollments = useEnrollmentsStore((state) => state.enrollments);
   const enroll = useEnrollmentsStore((state) => state.enroll);
   const unenroll = useEnrollmentsStore((state) => state.unenroll);
   const [course, setCourse] = useState<Course>(emptyCourse);
   const [showAllCourses, setShowAllCourses] = useState(false);
 
-  // Signed out: show every course. Signed in: enrolled only, unless toggled.
-  const visibleCourses =
-    !currentUser || showAllCourses
-      ? courses
-    : courses.filter((c) => isEnrolled(enrollments, currentUser?._id, c._id));
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setCourses(
+          currentUser && !showAllCourses
+            ? await client.findMyCourses()
+            : await client.fetchAllCourses(),
+        );
+      } catch {
+        setCourses([]);
+      }
+    };
+    load();
+  }, [currentUser, showAllCourses]);
 
-  const addAndEnroll = () => {
-    const newCourse = addCourse(course);
+  // The server already filters: my courses when signed in, all when toggled.
+  const visibleCourses = courses;
+
+  const addAndEnroll = async () => {
+    const newCourse = await client.createCourse(course);
+    addCourse(newCourse);
     // Enroll the creator so the new course shows in their enrolled view.
     if (currentUser) enroll(currentUser._id, newCourse._id);
+  };
+
+  const onEnroll = async (courseId: string) => {
+    if (!currentUser) return;
+    await enrollmentsClient.enrollIntoCourse("current", courseId);
+    enroll(currentUser._id, courseId);
+  };
+
+  const onUnenroll = async (courseId: string) => {
+    if (!currentUser) return;
+    await enrollmentsClient.unenrollFromCourse("current", courseId);
+    unenroll(currentUser._id, courseId);
+  };
+
+  const onDeleteCourse = async (courseId: string) => {
+    await client.deleteCourse(courseId);
+    deleteCourse(courseId);
+  };
+
+  const onUpdateCourse = async () => {
+    const saved = await client.updateCourse(course);
+    updateCourse(saved);
   };
 
   return (
@@ -66,7 +105,7 @@ export default function Dashboard() {
               type="button"
               className="rounded bg-yellow-400 px-3 py-1.5 text-sm font-medium"
               id="wd-update-course-click"
-              onClick={() => updateCourse(course)}
+              onClick={onUpdateCourse}
             >
               Update
             </button>
@@ -124,12 +163,10 @@ export default function Dashboard() {
               canOpen={!currentUser || enrolled}
               isFaculty={isFaculty}
               onEdit={() => setCourse(c)}
+              onDelete={() => onDeleteCourse(c._id)}
               onToggleEnrollment={
                 currentUser
-                  ? () =>
-                      enrolled
-                        ? unenroll(currentUser._id, c._id)
-                        : enroll(currentUser._id, c._id)
+                  ? () => (enrolled ? onUnenroll(c._id) : onEnroll(c._id))
                   : undefined
               }
             />

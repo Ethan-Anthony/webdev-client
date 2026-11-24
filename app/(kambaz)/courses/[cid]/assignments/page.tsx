@@ -1,20 +1,34 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import AssignmentItem from "./AssignmentItem";
 import { useAssignmentsStore } from "../../../store/assignmentsStore";
 import { canEdit, useAccountContext } from "../../../account/AccountContext";
+import * as client from "../../client";
 
 export default function Assignments() {
   const { cid } = useParams<{ cid: string }>();
+  const courseId = cid;
   const { currentUser } = useAccountContext();
   const isFaculty = canEdit(currentUser);
+  const assignments = useAssignmentsStore((state) => state.assignments);
+  const setAssignments = useAssignmentsStore((state) => state.setAssignments);
   const deleteAssignment = useAssignmentsStore((state) => state.deleteAssignment);
-  const assignments = useAssignmentsStore((state) => state.assignments).filter(
-    (assignment) => assignment.course === cid,
-  );
+
+  useEffect(() => {
+    const load = async () => {
+      setAssignments(await client.findAssignmentsForCourse(courseId));
+    };
+    load();
+  }, [courseId]);
+
+  const onDeleteAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    deleteAssignment(assignmentId);
+  };
 
   return (
     <div id="wd-assignments">
@@ -73,7 +87,7 @@ export default function Assignments() {
               isFaculty
                 ? () => {
                     if (window.confirm(`Remove ${assignment.title}?`)) {
-                      deleteAssignment(assignment._id);
+                      onDeleteAssignment(assignment._id);
                     }
                   }
                 : undefined

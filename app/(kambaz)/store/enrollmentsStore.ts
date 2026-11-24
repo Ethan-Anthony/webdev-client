@@ -7,12 +7,14 @@ export type Enrollment = (typeof enrollmentsJson)[number];
 
 type EnrollmentsStore = {
   enrollments: Enrollment[];
+  setEnrollments: (enrollments: Enrollment[]) => void;
   enroll: (userId: string, courseId: string) => void;
   unenroll: (userId: string, courseId: string) => void;
 };
 
 export const useEnrollmentsStore = create<EnrollmentsStore>((set) => ({
   enrollments: enrollmentsJson,
+  setEnrollments: (enrollments) => set({ enrollments }),
   enroll: (userId, courseId) =>
     set((state) =>
       state.enrollments.some((e) => e.user === userId && e.course === courseId)

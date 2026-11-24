@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import * as client from "../client";
 import { useAccountContext, type User } from "../AccountContext";
 
 export default function Profile() {
@@ -16,6 +17,12 @@ export default function Profile() {
     }
     setProfile(currentUser);
   }, [currentUser, router]);
+
+  const updateProfile = async () => {
+    if (!profile) return;
+    const user = await client.updateUser(profile);
+    setCurrentUser(user);
+  };
 
   const signout = () => {
     setCurrentUser(null);
@@ -63,6 +70,9 @@ export default function Profile() {
         <option value="FACULTY">Faculty</option>
         <option value="STUDENT">Student</option>
       </select>
+      <button type="button" onClick={updateProfile} id="wd-update-profile-btn">
+        Update
+      </button>
       <button type="button" onClick={signout} id="wd-signout-btn">
         Sign out
       </button>

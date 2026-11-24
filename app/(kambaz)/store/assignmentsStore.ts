@@ -8,8 +8,9 @@ export type Assignment = (typeof assignmentsJson)[number] & { until?: string };
 
 type AssignmentsStore = {
   assignments: Assignment[];
-  // Any _id passed in is replaced with a fresh one.
-  addAssignment: (assignment: Omit<Assignment, "_id"> & { _id?: string }) => void;
+  setAssignments: (assignments: Assignment[]) => void;
+  // Appends the server's saved assignment, keeping its _id.
+  addAssignment: (assignment: Assignment) => void;
   deleteAssignment: (assignmentId: string) => void;
   updateAssignment: (assignment: Assignment) => void;
   findAssignment: (assignmentId: string) => Assignment | undefined;
@@ -17,12 +18,10 @@ type AssignmentsStore = {
 
 export const useAssignmentsStore = create<AssignmentsStore>((set, get) => ({
   assignments: assignmentsJson,
+  setAssignments: (assignments) => set({ assignments }),
   addAssignment: (assignment) =>
     set((state) => ({
-      assignments: [
-        ...state.assignments,
-        { ...assignment, _id: crypto.randomUUID() },
-      ],
+      assignments: [...state.assignments, assignment],
     })),
   deleteAssignment: (assignmentId) =>
     set((state) => ({
