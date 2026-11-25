@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
+
 const LINKS = [
   { href: "/labs", id: "wd-home-link", label: "Home", match: (p: string) => p === "/labs" },
   { href: "/labs/lab1", id: "wd-lab1-link", label: "Lab 1", match: (p: string) => p.endsWith("/lab1") || p.includes("/lab1/") },
@@ -12,6 +14,8 @@ const LINKS = [
   { href: "/labs/lab5", id: "wd-lab5-link", label: "Lab 5", match: (p: string) => p.includes("/lab5") },
   { href: "/", id: "wd-kambaz-link", label: "Kambaz", match: () => false },
   { href: "https://kambaz.dev/book/ch3", id: "wd-book-ch3-link", label: "Book Ch3", match: () => false },
+  { href: "https://github.com/Ethan-Anthony/webdev-server", id: "wd-github-server-link", label: "Server GitHub", match: () => false },
+  { href: `${HTTP_SERVER}/`, id: "wd-server-root-link", label: "Server", match: () => false },
 ] as const;
 
 const activeStyle = {
